@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, ObservedValueOf, of } from 'rxjs';
 import { Hero } from './hero';
 import { MessageService } from './message.service';
 import { HEROES } from './mock-heroes';
@@ -42,6 +42,14 @@ export class HeroService {
     return this.http.put<Hero>(this.heroesUrl, hero).pipe(
       tap(_ => this.log(`Update hero id = ${hero.id}`)),
       catchError(this.handleError<any>('updateHero'))
+    )
+  }
+
+  /**POST: add a new hero to the server */
+  addHero(hero: Hero): Observable<Hero> {
+    return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
+      catchError(this.handleError<Hero>('addHero'))
     )
   }
 
